@@ -13,26 +13,18 @@ ros::Publisher pub2;
 void TurtleControl(const string& turtle_name, const string& direction, float speed) {
     geometry_msgs::Twist my_vel;
     
-    //ricontrolla codice per la velocita positiva
-    
-    if (direction == "forward" && speed > 0) {
+    if (direction == "forward") {
     my_vel.linear.x = speed; // i gave a positive number to go forward
     }
-    else if(direction == "backward" && speed > 0) {
+    else if(direction == "backward") {
     my_vel.linear.x = -speed; //i take the speed and put it negative to go backward
     }
-    else if(direction == "left" && speed > 0) {
+    else if(direction == "left") {
     my_vel.linear.y = speed; //same concept before
     }
-    else if(direction == "right" && speed > 0) {
+    else if(direction == "right") {
     my_vel.linear.y = -speed; 
-    } else {
-    cout<<"Invalid direction"<<endl;
-    
-    return;
-    } 
-    
-    // bordo 11,8
+    }
 
     if (turtle_name == "turtle1") {
         pub1.publish(my_vel);
@@ -51,9 +43,6 @@ void TurtleControl(const string& turtle_name, const string& direction, float spe
         // Publish an empty message to stop Turtle2 (velocity = 0)
         pub2.publish(geometry_msgs::Twist());
 
-    } 
-    else {
-        cout << "Turtle Name is not correct" << endl;
     }
 }
 
@@ -83,12 +72,27 @@ int main(int argc, char **argv)
 
         cout << "Enter turtle name (turtle1 or turtle2): ";
         cin >> turtle_name;
-
-        cout << "Enter Direction [Forward,Backward,Left,Right]: ";
+        
+        if(turtle_name != "turtle1" && turtle_name != "turtle2") {
+        cout<<"Wrong turtle name"<<endl;
+        return 0;
+        }
+        
+        cout << "Enter Direction [forward, backward, left, right]: ";
         cin >> direction;
-
-        cout<<"Enter speed of the turtle (positive value): ";
+        
+        if(direction != "forward" && direction != "left" && direction != "backward" && direction != "right") {
+        cout<<"Wrong direction!"<<endl;
+        return 0;
+        }
+        
+        cout<<"Enter speed of the turtle: ";
         cin >> speed;
+        
+        if (speed < 0) {
+        cerr<<"Insert a positive value for the speed!"<<endl;
+        return 0;
+        }
         
         TurtleControl(turtle_name, direction, speed);
         }
