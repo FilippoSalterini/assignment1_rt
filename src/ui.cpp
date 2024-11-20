@@ -4,13 +4,12 @@
 #include "turtlesim/Spawn.h"
 #include <iostream>
 #include <string>
-#include <thread>
 
 using namespace std;
 
 ros::Publisher pub1;
 ros::Publisher pub2;
-
+  
 void TurtleControl(const string& turtle_name, const string& direction, float speed) {
     geometry_msgs::Twist my_vel;
     
@@ -81,21 +80,19 @@ int main(int argc, char **argv)
 
         cout << "Enter turtle name (turtle1 or turtle2): ";
         cin >> turtle_name;
+
         cout << "Enter Direction [Forward,Backward,Left,Right] : ";
         cin >> direction;
+
         cout<<"Enter speed of the turtle (positive value); ";
         cin >> speed;
-      
-
         // Check if the turtle name is valid
         if (turtle_name != "turtle1" && turtle_name != "turtle2") {
             cout << "Invalid turtle name. Please enter 'turtle1' or 'turtle2'.\n";
-            continue;
         }
-
+        
         TurtleControl(turtle_name, direction, speed);
+        }
+        
+        return 0;
     }
-
-    return 0;
-}
-
