@@ -8,8 +8,8 @@ project(assignment1_rt)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
   rospy
+  roscpp
   turtlesim
   std_msgs
   geometry_msgs

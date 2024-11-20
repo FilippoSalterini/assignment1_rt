@@ -75,7 +75,8 @@ int main(int argc, char **argv)
     srv1.request.name = "turtle2";
     client1.waitForExistence();
     client1.call(srv1);
-
+    
+    //ciclo while
     while (ros::ok()) {
         string turtle_name, direction;
         float speed;
