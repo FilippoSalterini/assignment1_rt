@@ -9,20 +9,23 @@ using namespace std;
 
 ros::Publisher pub1;
 ros::Publisher pub2;
-  
+
 void TurtleControl(const string& turtle_name, const string& direction, float speed) {
     geometry_msgs::Twist my_vel;
     
     if (direction == "forward") {
-    my_vel.linear.x = speed; // i gave a positive number to go forward
+    my_vel.linear.x = speed; // I gave a positive number to go forward
     }
     else if(direction == "backward") {
-    my_vel.linear.x = -speed; //i take the speed and put it negative to go backward
+    //my_vel.angular.z = 5.0;
+    my_vel.linear.x = -speed; //I take the speed and put it negative to go backward
     }
     else if(direction == "left") {
-    my_vel.linear.y = speed; //same concept before
+    //my_vel.angular.z = 1.0;
+    my_vel.linear.y = speed; //Same concept before
     }
     else if(direction == "right") {
+    //my_vel.angular.z = -1.0;
     my_vel.linear.y = -speed; 
     }
 
