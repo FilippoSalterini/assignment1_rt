@@ -27,10 +27,12 @@ void TurtleControl(const string& turtle_name, const string& direction, float spe
     else if(direction == "right" && speed > 0) {
     my_vel.linear.y = -speed; 
     } else {
-    cout<<"Invalid direction use -Forward- -Backward- -Left- -Right-"<<endl;
+    cout<<"Invalid direction"<<endl;
     
     return;
     } 
+    
+    // bordo 11,8
 
     if (turtle_name == "turtle1") {
         pub1.publish(my_vel);
@@ -81,15 +83,11 @@ int main(int argc, char **argv)
         cout << "Enter turtle name (turtle1 or turtle2): ";
         cin >> turtle_name;
 
-        cout << "Enter Direction [Forward,Backward,Left,Right] : ";
+        cout << "Enter Direction [Forward,Backward,Left,Right]: ";
         cin >> direction;
 
-        cout<<"Enter speed of the turtle (positive value); ";
+        cout<<"Enter speed of the turtle (positive value): ";
         cin >> speed;
-        // Check if the turtle name is valid
-        if (turtle_name != "turtle1" && turtle_name != "turtle2") {
-            cout << "Invalid turtle name. Please enter 'turtle1' or 'turtle2'.\n";
-        }
         
         TurtleControl(turtle_name, direction, speed);
         }
