@@ -72,29 +72,38 @@ int main(int argc, char **argv)
     while (ros::ok()) {
         string turtle_name, direction;
         float speed;
-
+        
+        while(true) {
         cout << "Enter turtle name (turtle1 or turtle2): ";
         cin >> turtle_name;
         
-        if(turtle_name != "turtle1" && turtle_name != "turtle2") {
-        cout<<"Wrong turtle name"<<endl;
-        return 0;
+        if(turtle_name == "turtle1" || turtle_name == "turtle2") {
+        break; //valid turtle name so it can exit ftom the loop and procede with the direction
+        } else {
+        cout<<"Wrong turtle name! Insert turtle1 or turtle2: "<<endl;
+             }
         }
         
+        while(true) {
         cout << "Enter Direction [forward, backward, left, right]: ";
         cin >> direction;
         
-        if(direction != "forward" && direction != "left" && direction != "backward" && direction != "right") {
-        cout<<"Wrong direction!"<<endl;
-        return 0;
+        if(direction == "forward" || direction == "left" || direction == "backward" || direction == "right") {
+        break; //valid direction so it can exit from the loop and procede with the speed
+                } else {
+        cout<<"Wrong direction! Insert a correct direction [forward, backward, left, right]"<<endl;
+             }
         }
         
+        while(true) {
         cout<<"Enter speed of the turtle: ";
         cin >> speed;
         
-        if (speed < 0) {
-        cerr<<"Insert a positive value for the speed!"<<endl;
-        return 0;
+        if(speed >= 0) {
+        break; //valid value for the speed so it can exit from the loop and recall the function turtlecontrol
+        } else{
+        cout<<"Insert a positive value for the speed!"<<endl;
+            }
         }
         
         TurtleControl(turtle_name, direction, speed);
