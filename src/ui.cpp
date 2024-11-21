@@ -17,15 +17,12 @@ void TurtleControl(const string& turtle_name, const string& direction, float spe
     my_vel.linear.x = speed; // I gave a positive number to go forward
     }
     else if(direction == "backward") {
-    //my_vel.angular.z = 5.0;
     my_vel.linear.x = -speed; //I take the speed and put it negative to go backward
     }
     else if(direction == "left") {
-    //my_vel.angular.z = 1.0;
     my_vel.linear.y = speed; //Same concept before
     }
     else if(direction == "right") {
-    //my_vel.angular.z = -1.0;
     my_vel.linear.y = -speed; 
     }
 
