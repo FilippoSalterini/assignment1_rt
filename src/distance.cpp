@@ -29,37 +29,48 @@ float TurtleDistance (const turtlesim::Pose& position1, const turtlesim::Pose& p
       return sqrt(pow(position1.x - position2.x, 2) + pow(position1.y - position2.y, 2)); 
 }
 
-const float TRESHOlD = 1.0; //here I define a constant distance value for the 2 turtles to be used in the function to avoid the collision between the two
-
 void TurtleWall() {
-       
+      //i defined 4 const value that represent the walls, and a treshold for the limit distance between turtle and walls
        const float WallX = 10.0;
        const float WallY = 10.0;
        const float WallX0 = 1.0;
        const float WallY0 = 1.0;
        const float WALL_THRESHOLD = 0.5;
        
-       geometry_msgs::Twist vel_turtle1;
-       geometry_msgs::Twist vel_turtle2;
-       
-       if ((WallX - turtle1_position) < WALL_THRESHOLD || (WallX - turtle2_position)< WALL_TRESHOLD) {
-         vel_turtle1.linear.x = -0.5;
-         vel_turtle2.linear.x = -0.5;
-         }
-       if ((turtle1_position - WallX0) < WALL_TRESHOLD || (turtle2_position - WallX0) < WALL_TRESHOLD) {
-         vel_turtle1.linear.x = 0.5;
-         vel_turtle2.linear.x = 0.5;
-         }
-       if ((WallY - turtle1_position) < WALL_THRESHOLD || (WallY - turtle2_position)< WALL_TRESHOLD) {
-         vel_turtle1.linear.y = -0.5;
-         vel_turtle2.linear.y = -0.5;
-         }
-       if ((turtle1_position - WallY0) < WALL_TRESHOLD || (turtle2_position - WallY0) < WALL_TRESHOLD) {
-         vel_turtle1.linear.y = 0.5;
-         vel_turtle2.linear.y = 0.5;
-         }
-         vel_turtle_pub1.publish(vel_turtle1);
-         vel_turtle_pub2.publish(vel_turtle2);
+    geometry_msgs::Twist vel_turtle1;
+    geometry_msgs::Twist vel_turtle2;
+    
+    if ((WallX - turtle1_position.x) < WALL_THRESHOLD) {
+        vel_turtle1.linear.x = -0.5;
+        vel_turtle_pub1.publish(vel_turtle1);
+    } else if ((turtle1_position.x - WallX0) < WALL_THRESHOLD) {
+        vel_turtle1.linear.x = 0.5;
+        vel_turtle_pub1.publish(vel_turtle1);
+    }
+
+    if ((WallY - turtle1_position.y) < WALL_THRESHOLD) {
+        vel_turtle1.linear.y = -0.5;
+        vel_turtle_pub1.publish(vel_turtle1);
+    } else if ((turtle1_position.y - WallY0) < WALL_THRESHOLD) {
+        vel_turtle1.linear.y = 0.5;
+        vel_turtle_pub1.publish(vel_turtle1);
+    }
+
+    if ((WallX - turtle2_position.x) < WALL_THRESHOLD) {
+        vel_turtle2.linear.x = -0.5;
+        vel_turtle_pub2.publish(vel_turtle2);
+    } else if ((turtle2_position.x - WallX0) < WALL_THRESHOLD) {
+        vel_turtle2.linear.x = 0.5;
+        vel_turtle_pub2.publish(vel_turtle2);
+    }
+
+    if ((WallY - turtle2_position.y) < WALL_THRESHOLD) {
+        vel_turtle2.linear.y = -0.5;
+        vel_turtle_pub2.publish(vel_turtle2);
+    } else if ((turtle2_position.y - WallY0) < WALL_THRESHOLD) {
+        vel_turtle2.linear.y = 0.5;
+        vel_turtle_pub2.publish(vel_turtle2);
+    }
 }
 
 void TurtleImpact() {
@@ -73,22 +84,34 @@ void TurtleImpact() {
        if(distance < TRESHOlD) {
        ROS_WARN_STREAM("THE TURTLE ARE TOO CLOSE!: \n" << distance);
        // Move turtles apart by steering them in opposite directions
-       //i know its not correct
-       vel_turtle1.linear.x = -0.5;
-       vel_turtle1.linear.y = 0.5;
-
-       vel_turtle2.linear.x = 0.5;
-       vel_turtle2.linear.y = -0.5;
-
-       // Publish velocity commands
+       if(turtle1_position.x > turtle2_position.x){
+       vel_turtle1.linear.x = 0.5;
+       vel_turtle2.linear.x = -0.5;
        vel_turtle_pub1.publish(vel_turtle1);
        vel_turtle_pub2.publish(vel_turtle2);
-       }     
+       } else {
+       vel_turtle1.linear.x = -0.5;
+       vel_turtle2.linear.x = 0.5;
+       vel_turtle_pub1.publish(vel_turtle1);
+       vel_turtle_pub2.publish(vel_turtle2);
+       }
+       if(turtle1_position.y > turtle2_position.y){
+       vel_turtle1.linear.y = 0.5;
+       vel_turtle2.linear.y = -0.5;
+       vel_turtle_pub1.publish(vel_turtle1);
+       vel_turtle_pub2.publish(vel_turtle2);
+       } else {
+       vel_turtle1.linear.y = -0.5;
+       vel_turtle2.linear.y = 0.5;
+       vel_turtle_pub1.publish(vel_turtle1);
+       vel_turtle_pub2.publish(vel_turtle2);
+              }
+       }
 }
 
 int main(int argc, char **argv) {
 
-	ros::init(argc, argv, "distance_between_turtle");  
+	ros::init(argc, argv, "distance_between_turtle_and_wall");
 	ros::NodeHandle nh;
         ros::Subscriber turtle1_sub = nh.subscribe("/turtle1/pose", 10, Turtle1CallBackPosition);
         ros::Subscriber turtle2_sub = nh.subscribe("/turtle2/pose", 10, Turtle2CallBackPosition);
@@ -106,7 +129,7 @@ int main(int argc, char **argv) {
         
         ROS_INFO_STREAM("Distance between turtles: \n" << distance); //info to the monitor for checking the distance
         TurtleImpact();     //call the impact function to check if they are too close
-        TurtleWall();
+        TurtleWall();       //function that permitt the turtles to avoid the walls
         ros::spinOnce();    //here process the turtle callback, without any tipe of blocking loops
         loop_rate.sleep();
     }
