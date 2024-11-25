@@ -31,6 +31,37 @@ float TurtleDistance (const turtlesim::Pose& position1, const turtlesim::Pose& p
 
 const float TRESHOlD = 1.0; //here I define a constant distance value for the 2 turtles to be used in the function to avoid the collision between the two
 
+void TurtleWall() {
+       
+       const float WallX = 10.0;
+       const float WallY = 10.0;
+       const float WallX0 = 1.0;
+       const float WallY0 = 1.0;
+       const float WALL_THRESHOLD = 0.5;
+       
+       geometry_msgs::Twist vel_turtle1;
+       geometry_msgs::Twist vel_turtle2;
+       
+       if ((WallX - turtle1_position) < WALL_THRESHOLD || (WallX - turtle2_position)< WALL_TRESHOLD) {
+         vel_turtle1.linear.x = -0.5;
+         vel_turtle2.linear.x = -0.5;
+         }
+       if ((turtle1_position - WallX0) < WALL_TRESHOLD || (turtle2_position - WallX0) < WALL_TRESHOLD) {
+         vel_turtle1.linear.x = 0.5;
+         vel_turtle2.linear.x = 0.5;
+         }
+       if ((WallY - turtle1_position) < WALL_THRESHOLD || (WallY - turtle2_position)< WALL_TRESHOLD) {
+         vel_turtle1.linear.y = -0.5;
+         vel_turtle2.linear.y = -0.5;
+         }
+       if ((turtle1_position - WallY0) < WALL_TRESHOLD || (turtle2_position - WallY0) < WALL_TRESHOLD) {
+         vel_turtle1.linear.y = 0.5;
+         vel_turtle2.linear.y = 0.5;
+         }
+         vel_turtle_pub1.publish(vel_turtle1);
+         vel_turtle_pub2.publish(vel_turtle2);
+}
+
 void TurtleImpact() {
        const float TRESHOlD = 1.0; //here I define a constant distance value for the 2 turtles to be used in the function to avoid the collision between the two
        //i set a float distance that gaves me in realt time the distances between the 2 turtles
@@ -75,6 +106,7 @@ int main(int argc, char **argv) {
         
         ROS_INFO_STREAM("Distance between turtles: \n" << distance); //info to the monitor for checking the distance
         TurtleImpact();     //call the impact function to check if they are too close
+        TurtleWall();
         ros::spinOnce();    //here process the turtle callback, without any tipe of blocking loops
         loop_rate.sleep();
     }
