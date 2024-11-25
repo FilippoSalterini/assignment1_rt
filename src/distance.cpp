@@ -35,7 +35,7 @@ void TurtleWall() {
        const float WallY = 10.0;
        const float WallX0 = 1.0;
        const float WallY0 = 1.0;
-       const float WALL_THRESHOLD = 0.5;
+       const float WALL_THRESHOLD = 0.1;
        
     geometry_msgs::Twist vel_turtle1;
     geometry_msgs::Twist vel_turtle2;
