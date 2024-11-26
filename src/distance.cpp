@@ -41,33 +41,41 @@ void TurtleWall() {
     geometry_msgs::Twist vel_turtle2;
     
     if ((WallX - turtle1_position.x) < WALL_THRESHOLD) {
+            ROS_WARN_STREAM("THE TURTLE1 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle1.linear.x = -0.5;
         vel_turtle_pub1.publish(vel_turtle1);
     } else if ((turtle1_position.x - WallX0) < WALL_THRESHOLD) {
+            ROS_WARN_STREAM("THE TURTLE1 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle1.linear.x = 0.5;
         vel_turtle_pub1.publish(vel_turtle1);
     }
 
     if ((WallY - turtle1_position.y) < WALL_THRESHOLD) {
+            ROS_WARN_STREAM("THE TURTLE1 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle1.linear.y = -0.5;
         vel_turtle_pub1.publish(vel_turtle1);
     } else if ((turtle1_position.y - WallY0) < WALL_THRESHOLD) {
+            ROS_WARN_STREAM("THE TURTLE1 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle1.linear.y = 0.5;
         vel_turtle_pub1.publish(vel_turtle1);
     }
 
     if ((WallX - turtle2_position.x) < WALL_THRESHOLD) {
+            ROS_WARN_STREAM("THE TURTLE2 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle2.linear.x = -0.5;
         vel_turtle_pub2.publish(vel_turtle2);
     } else if ((turtle2_position.x - WallX0) < WALL_THRESHOLD) {
+                ROS_WARN_STREAM("THE TURTLE2 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle2.linear.x = 0.5;
         vel_turtle_pub2.publish(vel_turtle2);
     }
 
     if ((WallY - turtle2_position.y) < WALL_THRESHOLD) {
+                ROS_WARN_STREAM("THE TURTLE2 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle2.linear.y = -0.5;
         vel_turtle_pub2.publish(vel_turtle2);
     } else if ((turtle2_position.y - WallY0) < WALL_THRESHOLD) {
+                ROS_WARN_STREAM("THE TURTLE2 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle2.linear.y = 0.5;
         vel_turtle_pub2.publish(vel_turtle2);
     }
@@ -120,7 +128,6 @@ int main(int argc, char **argv) {
         vel_turtle_pub2 = nh.advertise<geometry_msgs::Twist>("/turtle2/cmd_vel", 10);
         
         ros::Rate loop_rate(10);
-        
     //ciclo while
     while (ros::ok()) {
         

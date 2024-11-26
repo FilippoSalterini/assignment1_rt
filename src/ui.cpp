@@ -12,18 +12,39 @@ ros::Publisher pub2;
 
 void TurtleControl(const string& turtle_name, const string& direction, float speed) {
     geometry_msgs::Twist my_vel;
-    
-    if (direction == "forward") {
+    //the directions of the turtles are oriented in respect of their head 
+    if (direction == "f") {
     my_vel.linear.x = speed; // I gave a positive number to go forward
+    my_vel.linear.y = 0;
     }
-    else if(direction == "backward") {
+    else if(direction == "b") {
     my_vel.linear.x = -speed; //I take the speed and put it negative to go backward
+    my_vel.linear.y = 0;
     }
-    else if(direction == "left") {
+    else if(direction == "l") {
     my_vel.linear.y = speed; 
+    my_vel.linear.x = 0;
     }
-    else if(direction == "right") {
+    else if(direction == "r") {
     my_vel.linear.y = -speed; 
+    my_vel.linear.x = 0;
+    } 
+    // i implemented later also the commando to go diagonally
+    else if (direction == "rf") {
+    my_vel.linear.x = speed;
+    my_vel.linear.y = -speed; 
+    }
+    else if(direction == "lf") {
+    my_vel.linear.x = speed; 
+    my_vel.linear.y = speed;
+    }
+    else if(direction == "lb") {
+    my_vel.linear.y = speed;
+    my_vel.linear.x = -speed; 
+    }
+    else if(direction == "rb") {
+    my_vel.linear.y = -speed;
+    my_vel.linear.x = -speed; 
     }
 
     if (turtle_name == "turtle1") {
@@ -69,6 +90,11 @@ int main(int argc, char **argv)
     while (ros::ok()) {
         string turtle_name, direction;
         float speed;
+        cout<<"LIST OF MOVEMENT TO CONTROL THE TURTLES: \n"<<endl;
+        cout<<" [FORWARD] digit [f]\n [BACKWARD] digit [b]\n";
+        cout<<" [LEFT] digit [l]\n [RIGHT] digit [r]\n";  
+        cout<<" [RIGHT-FORWARD] digit [rf]\n [LEFT-FORWARD] digit [lf]\n";  
+        cout<<" [RIGHT-BACKWARD] digit [rb]\n [LEFT-BACKWARD] digit [lb]\n";  
         
         while(true) {
         cout << "Enter turtle name (turtle1 or turtle2): ";
@@ -82,13 +108,16 @@ int main(int argc, char **argv)
         }
         
         while(true) {
-        cout << "Enter Direction [forward, backward, left, right]: ";
+        cout << "Enter Direction: ";
         cin >> direction;
         
-        if(direction == "forward" || direction == "left" || direction == "backward" || direction == "right") {
+        if(direction == "f" || direction == "l" || direction == "b" || direction == "r" || direction == "rf" || direction == "lf" || direction == "rb" || direction == "lb") {
         break; //valid direction so it can exit from the loop and procede with the speed
                 } else {
-        cout<<"Wrong direction! Insert a correct direction [forward, backward, left, right]"<<endl;
+        cout<<"Wrong direction! Insert a correct direction: \n [FORWARD] digit [f] - [BACKWARD] digit [b] \n";
+        cout<<" [LEFT] digit [l] - [RIGHT] digit [r]\n";  
+        cout<<" [RIGHT-FORWARD] digit [rf] - [LEFT-FORWARD] digit [lf]\n";  
+        cout<<" [RIGHT-BACKWARD] digit [rb] - [LEFT-BACKWARD] digit [lb]\n"; 
              }
         }
         
