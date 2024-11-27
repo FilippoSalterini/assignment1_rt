@@ -86,10 +86,12 @@ int main(int argc, char **argv)
     client1.waitForExistence();
     client1.call(srv1);
     
+    ros::Rate loop_rate(10); 
     //ciclo while
     while (ros::ok()) {
         string turtle_name, direction;
         float speed;
+        
         cout<<"LIST OF MOVEMENT TO CONTROL THE TURTLES: \n"<<endl;
         cout<<" [FORWARD] digit [f]\n [BACKWARD] digit [b]\n";
         cout<<" [LEFT] digit [l]\n [RIGHT] digit [r]\n";  
@@ -130,10 +132,12 @@ int main(int argc, char **argv)
         } else{
         cout<<"Insert a positive value for the speed!"<<endl;
             }
-        }
+        }  
         
         TurtleControl(turtle_name, direction, speed);
-        }
         
-        return 0;
+        ros::spinOnce();
+        loop_rate.sleep();
     }
+    return 0;
+}

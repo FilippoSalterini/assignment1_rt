@@ -2,6 +2,7 @@
 #include "turtlesim/Pose.h"
 #include "geometry_msgs/Twist.h"
 #include "turtlesim/Spawn.h"
+#include "std_msgs/Float32.h"      //needed for publishing the distances
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -31,51 +32,43 @@ float TurtleDistance (const turtlesim::Pose& position1, const turtlesim::Pose& p
 
 void TurtleWall() {
       //i defined 4 const value that represent the walls, and a treshold for the limit distance between turtle and walls
-       const float WallX = 10.0;
-       const float WallY = 10.0;
-       const float WallX0 = 1.0;
-       const float WallY0 = 1.0;
-       const float WALL_THRESHOLD = 0.1;
+       const float WallX = 11.0;
+       const float WallY = 11.0;
+       const float WallX0 = 0.0;
+       const float WallY0 = 0.0;
+       const float WALL_THRESHOLD = 1.0;
        
     geometry_msgs::Twist vel_turtle1;
     geometry_msgs::Twist vel_turtle2;
     
     if ((WallX - turtle1_position.x) < WALL_THRESHOLD) {
-            ROS_WARN_STREAM("THE TURTLE1 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle1.linear.x = -0.5;
         vel_turtle_pub1.publish(vel_turtle1);
     } else if ((turtle1_position.x - WallX0) < WALL_THRESHOLD) {
-            ROS_WARN_STREAM("THE TURTLE1 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle1.linear.x = 0.5;
         vel_turtle_pub1.publish(vel_turtle1);
     }
 
     if ((WallY - turtle1_position.y) < WALL_THRESHOLD) {
-            ROS_WARN_STREAM("THE TURTLE1 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle1.linear.y = -0.5;
         vel_turtle_pub1.publish(vel_turtle1);
     } else if ((turtle1_position.y - WallY0) < WALL_THRESHOLD) {
-            ROS_WARN_STREAM("THE TURTLE1 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle1.linear.y = 0.5;
         vel_turtle_pub1.publish(vel_turtle1);
     }
 
     if ((WallX - turtle2_position.x) < WALL_THRESHOLD) {
-            ROS_WARN_STREAM("THE TURTLE2 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle2.linear.x = -0.5;
         vel_turtle_pub2.publish(vel_turtle2);
     } else if ((turtle2_position.x - WallX0) < WALL_THRESHOLD) {
-                ROS_WARN_STREAM("THE TURTLE2 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle2.linear.x = 0.5;
         vel_turtle_pub2.publish(vel_turtle2);
     }
 
     if ((WallY - turtle2_position.y) < WALL_THRESHOLD) {
-                ROS_WARN_STREAM("THE TURTLE2 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle2.linear.y = -0.5;
         vel_turtle_pub2.publish(vel_turtle2);
     } else if ((turtle2_position.y - WallY0) < WALL_THRESHOLD) {
-                ROS_WARN_STREAM("THE TURTLE2 IS TOO CLOSE TO THE WALL!: \n");
         vel_turtle2.linear.y = 0.5;
         vel_turtle_pub2.publish(vel_turtle2);
     }
@@ -121,12 +114,26 @@ int main(int argc, char **argv) {
 
 	ros::init(argc, argv, "distance_between_turtle_and_wall");
 	ros::NodeHandle nh;
+	
         ros::Subscriber turtle1_sub = nh.subscribe("/turtle1/pose", 10, Turtle1CallBackPosition);
         ros::Subscriber turtle2_sub = nh.subscribe("/turtle2/pose", 10, Turtle2CallBackPosition);
         
         vel_turtle_pub1 = nh.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel", 10);
         vel_turtle_pub2 = nh.advertise<geometry_msgs::Twist>("/turtle2/cmd_vel", 10);
-        
+
+        //as suggested i create a publisher for the distances
+        ros::Publisher distance_pub = nh.advertise<std_msgs::Float32>("turtles_distance", 10);
+
+        //here i implemented a check for the position of the turtle to be initialized
+        while (ros::ok()) {
+        if (turtle1_position.x != 0.0 && turtle1_position.y != 0.0 && 
+            turtle2_position.x != 0.0 && turtle2_position.y != 0.0) {
+            ROS_INFO("The position of the 2 turtle are initialized");
+            break; // Both turtles are initialized
+        }
+        ros::spinOnce();
+        ros::Duration(0.1).sleep(); // Sleep for a short time before checking again
+    }
         ros::Rate loop_rate(10);
     //ciclo while
     while (ros::ok()) {
@@ -134,9 +141,18 @@ int main(int argc, char **argv) {
         //now i compute the distance between the 2 turtle
         float distance = TurtleDistance(turtle1_position, turtle2_position);
         
-        ROS_INFO_STREAM("Distance between turtles: \n" << distance); //info to the monitor for checking the distance
+        //here i publish the distance of the 2 turtle
+        if (turtle1_position.x != 0 && turtle2_position.x != 0) {
+            std_msgs::Float32 distance_msg;
+            distance_msg.data = TurtleDistance(turtle1_position, turtle2_position);
+            distance_pub.publish(distance_msg);
+        } else {
+            ROS_WARN("Turtle positions not initialized yet!");
+        }
+        
         TurtleImpact();     //call the impact function to check if they are too close
         TurtleWall();       //function that permitt the turtles to avoid the walls
+        
         ros::spinOnce();    //here process the turtle callback, without any tipe of blocking loops
         loop_rate.sleep();
     }
