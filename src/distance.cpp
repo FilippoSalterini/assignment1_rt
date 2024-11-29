@@ -32,10 +32,10 @@ float TurtleDistance (const turtlesim::Pose& position1, const turtlesim::Pose& p
 
 void TurtleWall() {
       //i defined 4 const value that represent the walls, and a treshold for the limit distance between turtle and walls
-       const float WallX = 11.0;
-       const float WallY = 11.0;
-       const float WallX0 = 0.0;
-       const float WallY0 = 0.0;
+       const float WallX = 12.0;
+       const float WallY = 12.0;
+       const float WallX0 = 0.5;
+       const float WallY0 = 0.5;
        const float WALL_THRESHOLD = 1.0;
        
     geometry_msgs::Twist vel_turtle1;
@@ -142,13 +142,10 @@ int main(int argc, char **argv) {
         float distance = TurtleDistance(turtle1_position, turtle2_position);
         
         //here i publish the distance of the 2 turtle
-        if (turtle1_position.x != 0 && turtle2_position.x != 0) {
             std_msgs::Float32 distance_msg;
             distance_msg.data = TurtleDistance(turtle1_position, turtle2_position);
             distance_pub.publish(distance_msg);
-        } else {
-            ROS_WARN("Turtle positions not initialized yet!");
-        }
+            ROS_INFO("Distance between the 2 turtles: %.2f", distance); //checking from the monitor if the distance is correct
         
         TurtleImpact();     //call the impact function to check if they are too close
         TurtleWall();       //function that permitt the turtles to avoid the walls
