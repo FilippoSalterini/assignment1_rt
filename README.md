@@ -16,6 +16,7 @@ This node controls two turtles in a ROS environment (Turtlesim). It allows user 
 I define 2 publisher ```Pub1``` and ```Pub2``` needed later to publish my linear velocities.  
 The function ```void TurtleControl(const string& turtle_name, const string& direction, float speed)```  control the turtle, taking as input turtle_name, direction and speed. Inside the function i initializes a ```geometry_msgs::Twist``` object ```(my_vel)``` to set linear velocities ```linear.x``` and ```linear.y``` based on the given direction.  
 Then publish velocities to the correct turtle ```pub1.publish(my_vel)``` for turtle1 and ```pub2.publish(my_vel)``` for turtle2.
-Sleep for 1 second to execute the movement ```ros::Duration(1.0).sleep()``` and then to stop the turtle after 1 sec publish zero velocity message ```pub1.publish(geometry_msgs::Twist())```.
-In the main :
-    ros::ServiceClient client1 = nh.serviceClient<turtlesim::Spawn>("/spawn")
+Sleep for 1 second to execute the movement ```ros::Duration(1.0).sleep()``` and then to stop the turtle after 1 sec publish zero velocity message ```pub1.publish(geometry_msgs::Twist())```.  
+In the main :  
+Creates a client ```ros::ServiceClient client1``` for the */spawn* service and spawn a turtle named turtle2 at position (2.0, 2.0). Runs continuously while ROS is active ```ros::ok())```, inside it will ask to the user the inputs : turtles name, direction and speed.
+* Notes : To kill the node press *Ctrl+C*, the programm will ask you to insert the last data (turtle name, direction and speed) and the will shut down the node.
