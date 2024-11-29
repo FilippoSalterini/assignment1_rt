@@ -75,14 +75,14 @@ void TurtleWall() {
 }
 
 void TurtleImpact() {
-       const float TRESHOlD = 1.0; //here I define a constant distance value for the 2 turtles to be used in the function to avoid the collision between the two
+       const float THRESHOlD = 1.0; //here I define a constant distance value for the 2 turtles to be used in the function to avoid the collision between the two
        //i set a float distance that gaves me in realt time the distances between the 2 turtles
        float distance = TurtleDistance(turtle1_position, turtle2_position);
        //create 2 twist msg for velocity adjustment
        geometry_msgs::Twist vel_turtle1;
        geometry_msgs::Twist vel_turtle2;
        //here I check if the distance between the two turtles is less than the previously defined limit "TRESHOLD"
-       if(distance < TRESHOlD) {
+       if(distance < THRESHOlD) {
        ROS_WARN_STREAM("THE TURTLE ARE TOO CLOSE!: \n" << distance);
        // Move turtles apart by steering them in opposite directions
        if(turtle1_position.x > turtle2_position.x){
